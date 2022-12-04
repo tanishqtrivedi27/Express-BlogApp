@@ -1,5 +1,6 @@
 import express from "express";
 import Article from './../models/article.js';
+import { saveArticleAndRedirect } from "../middleware/function.js"; 
 
 const router = express.Router()
 
@@ -38,23 +39,6 @@ router.delete('/:id', async (req, res) => {
   await Article.findByIdAndDelete(req.params.id)
   res.redirect('/')
 })
-
-
-function saveArticleAndRedirect(path) {
-  return async (req, res) => {
-    let article = req.article
-    article.title = req.body.title
-    article.description = req.body.description
-    article.markdown = req.body.markdown
-
-    try {
-      article = await article.save()
-      res.redirect(`/articles/${article._id}`)
-    } catch (error) {
-      res.render(`articles/${path}`, { article: article })
-    }
-  }
-}
 
 
 export default router;
